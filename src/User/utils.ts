@@ -5,7 +5,7 @@ import { IUser } from './types.ts';
 import { STATUS_SUCCESS } from '../strings.ts';
 
 /**
- * Function that generated JWT token for user id
+ * Function that generates JWT token for user id
  *
  * @param userId - User id
  * @returns - Generated JWT token
@@ -15,7 +15,7 @@ const signToken = (userId: string) => JWT.sign({ id: userId }, process.env.JWT_S
 });
 
 /**
- * Function that created JWT token and send it to the client
+ * Function that creates JWT token and sends it to the client
  *
  * @param user - User that wants the JWT
  * @param statusCode - Status code for the client response

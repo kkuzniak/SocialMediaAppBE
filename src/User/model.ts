@@ -4,6 +4,9 @@ import validator from 'validator';
 import { IUser } from './types.ts';
 import { REQUIRED_ERROR, VALID_EMAIL_ERROR, VALID_PASSWORD_CONFIRM_ERROR } from './strings.ts';
 
+/**
+ * User schema
+ */
 const userSchema = new Schema<IUser>({
   name: {
     type: String,
@@ -38,6 +41,7 @@ const userSchema = new Schema<IUser>({
       },
       message: VALID_PASSWORD_CONFIRM_ERROR,
     },
+    select: false,
   },
   active: {
     type: Boolean,
