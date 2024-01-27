@@ -5,12 +5,14 @@ import app from './app.ts';
 
 dotenv.config({ path: './.env.local' });
 
-const DB = process.env.DATABASE.replace(
-  '<PASSWORD>',
-  process.env.DATABASE_PASSWORD || '',
-);
+if (process.env.DATABASE) {
+  const DB = process.env.DATABASE.replace(
+    '<PASSWORD>',
+    process.env.DATABASE_PASSWORD || '',
+  );
 
-mongoose.connect(DB).then(() => console.log('DB CONNECTION SUCCESSFUL!'));
+  mongoose.connect(DB).then(() => console.log('DB CONNECTION SUCCESSFUL!'));
+}
 
 const port = process.env.PORT || 3000;
 
