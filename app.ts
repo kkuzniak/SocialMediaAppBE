@@ -9,7 +9,7 @@ import hpp from 'hpp';
 import compression from 'compression';
 import rateLimit from 'express-rate-limit';
 
-import userRouter from './src/User/routes.ts';
+import userRouter from './src/User/routes';
 
 const app = express();
 

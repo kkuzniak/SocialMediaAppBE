@@ -1,8 +1,8 @@
 import JWT from 'jsonwebtoken';
 import { Request, Response } from 'express';
 
-import { IUser } from './types.ts';
-import { STATUS_SUCCESS } from '../strings.ts';
+import { IUser } from './types';
+import { STATUS_SUCCESS } from '../strings';
 
 /**
  * Function that generates JWT token for user id

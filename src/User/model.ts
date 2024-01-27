@@ -1,8 +1,8 @@
 import { Schema, model } from 'mongoose';
 import validator from 'validator';
 
-import { IUser } from './types.ts';
-import { REQUIRED_ERROR, VALID_EMAIL_ERROR, VALID_PASSWORD_CONFIRM_ERROR } from './strings.ts';
+import { IUser } from './types';
+import { REQUIRED_ERROR, VALID_EMAIL_ERROR, VALID_PASSWORD_CONFIRM_ERROR } from './strings';
 
 /**
  * User schema

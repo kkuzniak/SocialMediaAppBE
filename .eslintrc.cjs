@@ -50,7 +50,7 @@ module.exports = {
         'newlines-between': 'always',
       },
     ],
-    'import/extensions': ['error', 'always'],
+    'import/extensions': ['error', 'never'],
     // error on any indentation which is not multiples of 4 spaces
     indent: 'off', // turn off classic eslint rule as it conflicts with typescript one
     // always wrap strings in single quotes
