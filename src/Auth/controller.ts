@@ -2,9 +2,9 @@ import { Request, Response } from 'express';
 import randomColor from 'randomcolor';
 
 import { STATUS_SUCCESS } from '../strings';
-import { User } from '../User/model';
 import { createSendToken } from '../User/utils';
 import { catchAsync } from '../utils';
+import { User } from '../User/model';
 
 /**
  * Endpoint that signs up the user

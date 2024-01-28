@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "start": "nodemon --exec 'ts-node-esm' --experimental-specifier-resolution=node ./dist/server.js",
+    "start": "NODE_ENV=production nodemon --exec 'ts-node-esm' --experimental-specifier-resolution=node ./dist/server.js",
     "dev": "nodemon --watch '*.ts' --exec 'ts-node-esm' --experimental-specifier-resolution=node server.ts",
     "prod": "NODE_ENV=production nodemon --watch '*.ts' --exec 'ts-node-esm' --experimental-specifier-resolution=node server.ts",
     "build": "tsc",
