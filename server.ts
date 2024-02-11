@@ -5,8 +5,10 @@ import app from './app';
 
 dotenv.config({ path: './.env.local' });
 
-if (process.env.DATABASE) {
-  const DB = process.env.DATABASE.replace(
+const { DATABASE } = process.env;
+
+if (DATABASE) {
+  const DB = DATABASE.replace(
     '<PASSWORD>',
     process.env.DATABASE_PASSWORD || '',
   );

@@ -8,7 +8,7 @@ import { STATUS_SUCCESS } from '../strings';
  * Function that generates JWT token for user id
  *
  * @param userId - User id
- * @returns - Generated JWT token
+ * @returns a generated JWT token
  */
 const signToken = (userId: string) => JWT.sign({ id: userId }, process.env.JWT_SECRET, {
   expiresIn: process.env.JWT_EXPIRES_IN,

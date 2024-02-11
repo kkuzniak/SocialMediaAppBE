@@ -5,6 +5,7 @@ module.exports = {
     browser: true,
     es2022: true,
     node: true,
+    jest: true,
   },
   extends: ['airbnb', 'airbnb-typescript', 'prettier'],
   parserOptions: {

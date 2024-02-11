@@ -20,7 +20,7 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "types": ["node"],
+    "types": ["node", "jest"],
   },
-  "include": ["src/**/*", "./*.ts", "./*.js", "webpack.config.cjs"],
+  "include": ["src/**/*", "./*.ts", "./*.js", "tests/**/*.test.ts", "tests/*.ts", "webpack.config.cjs"],
 }
