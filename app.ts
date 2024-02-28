@@ -10,6 +10,7 @@ import compression from 'compression';
 import rateLimit from 'express-rate-limit';
 
 import userRouter from './src/User/routes';
+import { handleGlobalErrors } from './src/Error/controller';
 
 const app = express();
 
@@ -45,5 +46,7 @@ app.use(
 app.use(compression());
 
 app.use('/api/v1/users', userRouter);
+
+app.use(handleGlobalErrors);
 
 export default app;

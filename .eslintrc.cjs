@@ -34,6 +34,8 @@ module.exports = {
     '@typescript-eslint/no-unused-vars': 'off', // do not allow variables which are not used anywhere
     'object-shorthand': 'off',
     'no-underscore-dangle': 'off', // disallow dangling underscores in identifiers
+    "lines-between-class-members": "off",
+    "@typescript-eslint/lines-between-class-members": "off",
 
     /** these are our own custom rules **/
     '@typescript-eslint/indent': ['error', 2], // enforcing consistent indentation
