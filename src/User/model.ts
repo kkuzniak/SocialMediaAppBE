@@ -1,5 +1,6 @@
-import { Schema, model } from 'mongoose';
+import { CallbackWithoutResultAndOptionalError, Schema, model } from 'mongoose';
 import validator from 'validator';
+import bcrypt from 'bcryptjs';
 
 import { IUser } from './types';
 import { REQUIRED_ERROR, VALID_EMAIL_ERROR, VALID_PASSWORD_CONFIRM_ERROR } from './strings';
@@ -49,5 +50,21 @@ const userSchema = new Schema<IUser>({
     select: false,
   },
 });
+
+userSchema.pre('save', async function(this: IUser, next: CallbackWithoutResultAndOptionalError) {
+  this.password = await bcrypt.hash(this.password, 12);
+  this.passwordConfirm = undefined;
+
+  next();
+});
+
+userSchema.methods.isPasswordCorrect = async function(
+  passwordToCheck: string,
+  correctPassword: string,
+) {
+  const result = await bcrypt.compare(passwordToCheck, correctPassword);
+
+  return result;
+};
 
 export const User = model<IUser>('User', userSchema);

@@ -22,7 +22,7 @@ const signToken = (userId: string) => JWT.sign({ id: userId }, process.env.JWT_S
  * @param req - Request
  * @param res - Response
  */
-export const createSendToken = (user: IUser, statusCode: number, req: Request, res: Response) => {
+export const createAndSendToken = (user: IUser, statusCode: number, req: Request, res: Response) => {
   const token = signToken(user._id);
   const JWT_EXPIRES_IN_SECONDS = +process.env.JWT_COOKIE_EXPIRES_IN * 60 * 60 * 1000;
 

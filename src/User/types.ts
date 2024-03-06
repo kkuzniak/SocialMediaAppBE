@@ -8,4 +8,5 @@ export interface IUser extends Document {
   password: string;
   passwordConfirm: string;
   active: boolean;
+  isPasswordCorrect: (passwordToCheck: string, correctPassword: string) => boolean;
 }

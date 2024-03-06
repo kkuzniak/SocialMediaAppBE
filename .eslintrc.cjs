@@ -36,6 +36,8 @@ module.exports = {
     'no-underscore-dangle': 'off', // disallow dangling underscores in identifiers
     "lines-between-class-members": "off",
     "@typescript-eslint/lines-between-class-members": "off",
+    'consistent-return': 'off', // if function return a value in one logical branch it should return a value in all other branches as well
+    'func-names': ['off'],
 
     /** these are our own custom rules **/
     '@typescript-eslint/indent': ['error', 2], // enforcing consistent indentation
@@ -68,7 +70,6 @@ module.exports = {
     // which is something we should encourage but most of our functions are currently defined as expressions so it highlights a lot of issues
     // maybe we can enable this at some point?
     // "func-style": ["warn", "expression"],
-    'func-names': ['warn', 'as-needed'],
     'no-trailing-spaces': 'error',
 
     /** These rules are set to `warn` to suppress the default `error` value they have so once each is resolved we should remove the specific rule  **/
@@ -84,7 +85,6 @@ module.exports = {
     'array-callback-return': 'warn', // each array loop-like method expecing return value should return one (map, filter ...)
     'block-scoped-var': 'warn', // warn if variable defined with "var" is used outside of a block in which it was defined
     'class-methods-use-this': 'warn', // make sure "this" is used in every non-static class method
-    'consistent-return': 'warn', // if function return a value in one logical branch it should return a value in all other branches as well
     'guard-for-in': 'warn', // the body of a for-in should be wrapped in an if statement to filter unwanted properties from the prototype
     'import/no-duplicates': ['warn', { considerQueryString: true }], // allow only single import of module in a file
     'import/no-mutable-exports': 'warn', // disallow exporting variables defined with "let" from a module

@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 
 import { ApiError, MongooseErrorKeyValue, MongooseValidationError } from './types';
-import { isJsonWebTokenError, isJsonWebTokenExpiredError, isMongooseDuplicateFieldsError, isMongooseValidationError } from './utils';
+import { isApiError, isJsonWebTokenError, isJsonWebTokenExpiredError, isMongooseDuplicateFieldsError, isMongooseValidationError } from './utils';
 import { duplicateFieldsErrorMessage, validationDatabaseErrorMessage } from './dynamic_strings';
 import { INVALID_TOKEN, SOMETHING_WENT_WRONG, THE_TOKEN_HAS_EXPIRED } from './strings';
 
@@ -26,10 +26,10 @@ const handleJsonWebTokenError = () => new ApiError(INVALID_TOKEN, 401);
 
 const handleJsonWebTokenExpiredError = () => new ApiError(THE_TOKEN_HAS_EXPIRED, 401);
 
-const sendError = (error: ApiError, _: Request, response: Response) => {
-  const { isOperational, status, statusCode, message } = error;
+const sendError = (error: unknown | ApiError, _: Request, response: Response) => {
+  if (isApiError(error) && error.isOperational) {
+    const { status, statusCode, message } = error;
 
-  if (isOperational) {
     return response.status(statusCode).json({
       status,
       message,
@@ -43,12 +43,12 @@ const sendError = (error: ApiError, _: Request, response: Response) => {
 };
 
 export const handleGlobalErrors = (
-  caughtError: unknown,
+  caughtError: unknown | ApiError,
   request: Request,
   response: Response,
   _: NextFunction,
 ) => {
-  let errorResponse = new ApiError('', 500, false);
+  let errorResponse;
 
   if (isMongooseDuplicateFieldsError(caughtError)) {
     errorResponse = handleDuplicateFieldsError(caughtError.keyValue);
@@ -66,5 +66,5 @@ export const handleGlobalErrors = (
     errorResponse = handleJsonWebTokenExpiredError();
   }
 
-  return sendError(errorResponse, request, response);
+  return sendError(errorResponse || caughtError, request, response);
 };
