@@ -23,4 +23,5 @@
     "types": ["node", "jest"],
   },
   "include": ["src/**/*", "./*.ts", "./*.js", "tests/**/*.test.ts", "tests/*.ts", "webpack.config.cjs"],
+  "files": ["src/customTypes.d.ts"],
 }

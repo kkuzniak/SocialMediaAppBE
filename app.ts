@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 import helmet from 'helmet';
@@ -8,9 +8,12 @@ import { xss } from 'express-xss-sanitizer';
 import hpp from 'hpp';
 import compression from 'compression';
 import rateLimit from 'express-rate-limit';
+import cookieParser from 'cookie-parser';
 
 import userRouter from './src/User/routes';
 import { handleGlobalErrors } from './src/Error/controller';
+import postRouter from './src/Post/routes';
+import { ApiError } from './src/Error/types';
 
 const app = express();
 
@@ -34,6 +37,7 @@ app.use('/api', limiter);
 
 app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
+app.use(cookieParser());
 
 app.use(mongoSanitize());
 
@@ -46,6 +50,11 @@ app.use(
 app.use(compression());
 
 app.use('/api/v1/users', userRouter);
+app.use('/api/v1/posts', postRouter);
+
+app.all('*', (request: Request, _: Response, next: NextFunction) => {
+  next(new ApiError(`Cannot find ${request.originalUrl} on this server`, 404));
+});
 
 app.use(handleGlobalErrors);
 

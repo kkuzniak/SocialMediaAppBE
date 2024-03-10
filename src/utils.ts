@@ -11,5 +11,5 @@ import { RequestHandler } from './types';
  * @returns an async function to catch the errors from its result
  */
 export const catchAsync = (fn: RequestHandler) =>
-  (req: Request, res: Response, next: NextFunction) =>
-    fn(req, res, next).catch(next);
+  (request: Request, response: Response, next: NextFunction) =>
+    fn(request, response, next).catch(next);

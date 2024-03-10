@@ -1,7 +1,7 @@
-import JWT from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import { Request, Response } from 'express';
 
-import { IUser } from './types';
+import { IUser } from '../User/types';
 import { STATUS_SUCCESS } from '../strings';
 
 /**
@@ -10,7 +10,7 @@ import { STATUS_SUCCESS } from '../strings';
  * @param userId - User id
  * @returns a generated JWT token
  */
-const signToken = (userId: string) => JWT.sign({ id: userId }, process.env.JWT_SECRET, {
+const signToken = (userId: string) => jwt.sign({ id: userId }, process.env.JWT_SECRET, {
   expiresIn: process.env.JWT_EXPIRES_IN,
 });
 

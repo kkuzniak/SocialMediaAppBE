@@ -49,6 +49,7 @@ export const handleGlobalErrors = (
   _: NextFunction,
 ) => {
   let errorResponse;
+  console.log('CAUGHT ERROR: ', caughtError);
 
   if (isMongooseDuplicateFieldsError(caughtError)) {
     errorResponse = handleDuplicateFieldsError(caughtError.keyValue);
