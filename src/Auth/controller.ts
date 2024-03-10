@@ -51,7 +51,7 @@ export const login = catchAsync(async (req: Request, res: Response, next: NextFu
   }
 
   const user = await User.findOne({ email }).select('+password');
-  const isPasswordCorrect = await user.isPasswordCorrect(password, user.password);
+  const isPasswordCorrect = user ? await user.isPasswordCorrect(password, user.password) : false;
 
   if (!user || !isPasswordCorrect) {
     return next(new ApiError(INCORRECT_EMAIL_OR_PASSWORD, 401));
