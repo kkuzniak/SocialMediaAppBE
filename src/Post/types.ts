@@ -6,4 +6,5 @@ export interface IPost extends Document {
   images: [string];
   likes: [Schema.Types.ObjectId];
   addedAt: Date;
+  updatedAt: Date;
 }

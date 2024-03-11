@@ -24,6 +24,10 @@ const postSchema = new Schema<IPost>({
     type: Date,
     default: Date.now(),
   },
+  updatedAt: {
+    type: Date,
+    default: Date.now(),
+  },
 });
 
 export const Post = model<IPost>('Post', postSchema);

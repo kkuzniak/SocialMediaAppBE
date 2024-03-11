@@ -19,12 +19,12 @@ export const createPost = catchAsync(async (request: Request, response: Response
   });
 });
 
-export const addLike = catchAsync(async (request: Request, response: Response, next: NextFunction) => {
-  const { params, user } = request;
+export const updatePost = catchAsync(async (request: Request, response: Response, next: NextFunction) => {
+  const { body, params } = request;
+  const { text } = body;
   const { id: postId } = params;
-  const { id: userId } = user;
 
-  const document = await Post.findByIdAndUpdate(postId, { $addToSet: { likes: userId } });
+  const document = await Post.findByIdAndUpdate(postId, { text, updatedAt: Date.now() }, { new: true });
 
   if (!document) {
     return next(new ApiError(A_POST_DOESNT_EXIST, 404));
@@ -33,5 +33,23 @@ export const addLike = catchAsync(async (request: Request, response: Response, n
   response.status(200).json({
     status: STATUS_SUCCESS,
     data: document,
+  });
+});
+
+export const addLike = catchAsync(async (request: Request, response: Response, next: NextFunction) => {
+  const { params, user } = request;
+  const { id: postId } = params;
+  const { id: userId } = user;
+
+  const document = await Post.findByIdAndUpdate(postId, { $addToSet: { likes: userId } }, { new: true });
+
+  if (!document) {
+    return next(new ApiError(A_POST_DOESNT_EXIST, 404));
+  }
+
+  response.status(200).json({
+    status: STATUS_SUCCESS,
+    results: document.likes.length,
+    data: document.likes,
   });
 });
