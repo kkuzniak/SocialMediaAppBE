@@ -1,1 +1,1 @@
-export const A_POST_WITH_THE_GIVEN_ID = 'A post with the given ID does not exist.';
+export const A_POST_DOESNT_EXIST = 'A post with the given ID does not exist.';
