@@ -4,7 +4,7 @@ import { catchAsync } from '../utils';
 import { STATUS_SUCCESS } from '../strings';
 import { Post } from './model';
 import { ApiError } from '../Error/types';
-import { A_POST_DOESNT_EXIST } from './strings';
+import { A_POST_DOESNT_EXIST, YOU_CANNOT_REMOVE_OTHER_USER_POST } from './strings';
 
 export const createPost = catchAsync(async (request: Request, response: Response) => {
   const { body, user } = request;
@@ -15,7 +15,9 @@ export const createPost = catchAsync(async (request: Request, response: Response
 
   response.status(200).json({
     status: STATUS_SUCCESS,
-    data: document,
+    data: {
+      data: document,
+    },
   });
 });
 
@@ -32,7 +34,32 @@ export const updatePost = catchAsync(async (request: Request, response: Response
 
   response.status(200).json({
     status: STATUS_SUCCESS,
-    data: document,
+    data: {
+      data: document,
+    },
+  });
+});
+
+export const deletePost = catchAsync(async (request: Request, response: Response, next: NextFunction) => {
+  const { params, user } = request;
+  const { id: postId } = params;
+  const { id: userId } = user;
+
+  const document = await Post.findById(postId);
+
+  if (!document) {
+    return next(new ApiError(A_POST_DOESNT_EXIST, 404));
+  }
+
+  if (document.user.toString() !== userId) {
+    return next(new ApiError(YOU_CANNOT_REMOVE_OTHER_USER_POST, 400));
+  }
+
+  await Post.findByIdAndDelete(postId);
+
+  response.status(204).json({
+    status: STATUS_SUCCESS,
+    data: null,
   });
 });
 
@@ -50,6 +77,8 @@ export const addLike = catchAsync(async (request: Request, response: Response, n
   response.status(200).json({
     status: STATUS_SUCCESS,
     results: document.likes.length,
-    data: document.likes,
+    data: {
+      data: document.likes,
+    },
   });
 });
