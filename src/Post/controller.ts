@@ -5,6 +5,7 @@ import { STATUS_SUCCESS } from '../strings';
 import { Post } from './model';
 import { ApiError } from '../Error/types';
 import { A_POST_DOESNT_EXIST, YOU_CANNOT_REMOVE_OTHER_USER_POST } from './strings';
+import { ToggleLikeActionType } from './types';
 
 export const createPost = catchAsync(async (request: Request, response: Response) => {
   const { body, user } = request;
@@ -63,25 +64,28 @@ export const deletePost = catchAsync(async (request: Request, response: Response
   });
 });
 
-export const addLike = catchAsync(async (request: Request, response: Response, next: NextFunction) => {
-  const { params, user } = request;
-  const { id: postId } = params;
-  const { id: userId } = user;
+export const toggleLike = (actionType: ToggleLikeActionType) =>
+  catchAsync(async (request: Request, response: Response, next: NextFunction) => {
+    const action = actionType === ToggleLikeActionType.like ? '$addToSet' : '$pull';
 
-  const document = await Post.findByIdAndUpdate(postId, { $addToSet: { likes: userId } }, { new: true }).populate({
-    path: 'likes',
-    select: 'name',
+    const { params, user } = request;
+    const { id: postId } = params;
+    const { id: userId } = user;
+
+    const document = await Post.findByIdAndUpdate(postId, { [action]: { likes: userId } }, { new: true }).populate({
+      path: 'likes',
+      select: 'name',
+    });
+
+    if (!document) {
+      return next(new ApiError(A_POST_DOESNT_EXIST, 404));
+    }
+
+    response.status(200).json({
+      status: STATUS_SUCCESS,
+      results: document.likes.length,
+      data: {
+        data: document.likes,
+      },
+    });
   });
-
-  if (!document) {
-    return next(new ApiError(A_POST_DOESNT_EXIST, 404));
-  }
-
-  response.status(200).json({
-    status: STATUS_SUCCESS,
-    results: document.likes.length,
-    data: {
-      data: document.likes,
-    },
-  });
-});

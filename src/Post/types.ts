@@ -8,3 +8,8 @@ export interface IPost extends Document {
   addedAt: Date;
   updatedAt: Date;
 }
+
+export enum ToggleLikeActionType {
+  like = 'like',
+  unlike = 'unlike'
+};
