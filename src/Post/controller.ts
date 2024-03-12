@@ -68,7 +68,10 @@ export const addLike = catchAsync(async (request: Request, response: Response, n
   const { id: postId } = params;
   const { id: userId } = user;
 
-  const document = await Post.findByIdAndUpdate(postId, { $addToSet: { likes: userId } }, { new: true });
+  const document = await Post.findByIdAndUpdate(postId, { $addToSet: { likes: userId } }, { new: true }).populate({
+    path: 'likes',
+    select: 'name',
+  });
 
   if (!document) {
     return next(new ApiError(A_POST_DOESNT_EXIST, 404));
