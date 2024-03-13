@@ -41,6 +41,27 @@ export const updatePost = catchAsync(async (request: Request, response: Response
   });
 });
 
+export const getPost = catchAsync(async (request: Request, response: Response, next: NextFunction) => {
+  const { params } = request;
+  const { id: postId } = params;
+
+  const document = await Post.findById(postId).populate({
+    path: 'likes',
+    select: 'name',
+  });
+
+  if (!document) {
+    return next(new ApiError(A_POST_DOESNT_EXIST, 404));
+  }
+
+  response.status(200).json({
+    status: STATUS_SUCCESS,
+    data: {
+      data: document,
+    },
+  });
+});
+
 export const deletePost = catchAsync(async (request: Request, response: Response, next: NextFunction) => {
   const { params, user } = request;
   const { id: postId } = params;
@@ -89,3 +110,18 @@ export const toggleLike = (actionType: ToggleLikeActionType) =>
       },
     });
   });
+
+export const getAllPosts = catchAsync(async (_: Request, response: Response) => {
+  const documents = await Post.find().populate({
+    path: 'likes',
+    select: 'name',
+  }).sort({ addedAt: -1 }).select('-__v');
+
+  response.status(200).json({
+    status: STATUS_SUCCESS,
+    results: documents.length,
+    data: {
+      data: documents,
+    },
+  });
+});
