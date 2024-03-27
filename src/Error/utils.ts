@@ -1,6 +1,12 @@
 import { JsonWebTokenError } from 'jsonwebtoken';
 
-import { ApiError, JsonWebTokenExpiredError, MongooseDuplicateFieldsError, MongooseValidationError } from './types';
+import {
+  ApiError,
+  JsonWebTokenExpiredError,
+  LimitUnexpectedFileError,
+  MongooseDuplicateFieldsError,
+  MongooseValidationError,
+} from './types';
 
 /**
  * A type guard function to check if the error is of the Error type
@@ -54,7 +60,6 @@ export const isApiError = (error: unknown | ApiError): error is ApiError => {
 export const isMongooseDuplicateFieldsError = (error: unknown | ApiError): error is MongooseDuplicateFieldsError => {
   if (
     isStandardError(error) &&
-    typeof error === 'object' &&
     'keyValue' in error &&
     typeof error.keyValue === 'object' &&
     'code' in error &&
@@ -76,7 +81,6 @@ export const isMongooseDuplicateFieldsError = (error: unknown | ApiError): error
 export const isMongooseValidationError = (error: unknown | ApiError): error is MongooseValidationError => {
   if (
     isStandardError(error) &&
-    typeof error === 'object' &&
     'errors' in error &&
     typeof error.errors === 'object' &&
     Object.values(error.errors).every(value =>
@@ -113,6 +117,23 @@ export const isJsonWebTokenError = (error: unknown | ApiError): error is JsonWeb
  */
 export const isJsonWebTokenExpiredError = (error: unknown | ApiError): error is JsonWebTokenExpiredError => {
   if (isStandardError(error) && error.name === 'TokenExpiredError') {
+    return true;
+  }
+
+  return false;
+};
+
+/**
+ * A type guard function to check if the error is of the LimitUnexpectedFileError type
+ *
+ * @param error - Error
+ * @returns true when the error is of the LimitUnexpectedFileError type, false when it's not
+ */
+export const isLimitUnexpectedFileError = (error: unknown | ApiError): error is LimitUnexpectedFileError => {
+  if (isStandardError(error) &&
+    'code' in error &&
+    error.code === 'LIMIT_UNEXPECTED_FILE'
+  ) {
     return true;
   }
 

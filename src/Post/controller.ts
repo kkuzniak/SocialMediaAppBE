@@ -10,13 +10,14 @@ import { Post } from './model';
 import { ApiError } from '../Error/types';
 import { A_POST_DOESNT_EXIST, YOU_CANNOT_REMOVE_OTHER_USER_POST } from './strings';
 import { ToggleLikeActionType } from './types';
+import { postImageFilter } from './utils';
 
 const storage = multer.memoryStorage();
-const upload = multer({ storage });
+const upload = multer({ storage, fileFilter: postImageFilter });
 
 export const uploadPostImage = upload.single('images');
 
-export const createPost = catchAsync(async (request: Request, response: Response) => {
+export const createPost = catchAsync(async (request: Request, response: Response, _: NextFunction) => {
   const { body, user } = request;
   const { text } = body;
   const { id: userId } = user;

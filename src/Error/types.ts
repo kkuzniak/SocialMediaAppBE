@@ -40,3 +40,7 @@ export interface JsonWebTokenError extends Error {
 export interface JsonWebTokenExpiredError extends Error {
   name: 'TokenExpiredError'
 }
+
+export interface LimitUnexpectedFileError extends Error {
+  code: 'LIMIT_UNEXPECTED_FILE';
+}
