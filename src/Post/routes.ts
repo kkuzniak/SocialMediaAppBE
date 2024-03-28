@@ -11,7 +11,7 @@ postRouter.route('/')
   .post(protect, uploadPostImage, createPost);
 postRouter.route('/:id')
   .get(protect, getPost)
-  .patch(protect, updatePost)
+  .patch(protect, uploadPostImage, updatePost)
   .delete(protect, deletePost);
 
 postRouter.route('/:id/like').patch(protect, toggleLike(ToggleLikeActionType.like));

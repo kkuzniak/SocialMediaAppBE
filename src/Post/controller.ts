@@ -1,7 +1,4 @@
 import { NextFunction, Request, Response } from 'express';
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
-import path from 'path';
-import { v4 as uuid } from 'uuid';
 import multer from 'multer';
 
 import { catchAsync } from '../utils';
@@ -11,6 +8,8 @@ import { ApiError } from '../Error/types';
 import { A_POST_DOESNT_EXIST, YOU_CANNOT_REMOVE_OTHER_USER_POST } from './strings';
 import { ToggleLikeActionType } from './types';
 import { postImageFilter } from './utils';
+import { S3DeleteUserImage, S3UploadUserImage } from '../S3/controller';
+import { getUserImageFilePath } from '../S3/utils';
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage, fileFilter: postImageFilter });
@@ -18,33 +17,15 @@ const upload = multer({ storage, fileFilter: postImageFilter });
 export const uploadPostImage = upload.single('images');
 
 export const createPost = catchAsync(async (request: Request, response: Response, _: NextFunction) => {
-  const { body, user } = request;
+  const { body, user, file } = request;
   const { text } = body;
   const { id: userId } = user;
-  let images: string[];
+  let images: string[] = [];
 
-  if (request.file) {
-    const s3Client = new S3Client({
-      region: process.env.AWS_REGION,
-      credentials: {
-        accessKeyId: process.env.AWS_ACCESS_KEY,
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-      },
-    });
+  if (file) {
+    images = [getUserImageFilePath(userId, file)];
 
-    const stringifiedUserId = userId.toString();
-    const filename = uuid();
-    const extension = path.extname(request.file.originalname);
-
-    images = [`${stringifiedUserId}/${filename}${extension}`];
-
-    const s3Command = new PutObjectCommand({
-      Bucket: process.env.AWS_BUCKET_NAME,
-      Key: images[0],
-      Body: request.file.buffer,
-    });
-
-    await s3Client.send(s3Command);
+    await S3UploadUserImage(file, images[0]);
   }
 
   const document = await Post.create({ user: userId, text, images });
@@ -58,20 +39,40 @@ export const createPost = catchAsync(async (request: Request, response: Response
 });
 
 export const updatePost = catchAsync(async (request: Request, response: Response, next: NextFunction) => {
-  const { body, params } = request;
+  const { body, params, user, file } = request;
   const { text } = body;
   const { id: postId } = params;
+  const { id: userId } = user;
 
-  const document = await Post.findByIdAndUpdate(postId, { text, updatedAt: Date.now() }, { new: true });
+  const document = await Post.findById(postId);
 
   if (!document) {
     return next(new ApiError(A_POST_DOESNT_EXIST, 404));
   }
 
+  const [prevImagePath] = document.images;
+
+  if (prevImagePath) {
+    await S3DeleteUserImage(prevImagePath);
+  }
+
+  let images: string[] = [];
+
+  if (file) {
+    images = [getUserImageFilePath(userId, file)];
+
+    await S3UploadUserImage(file, images[0]);
+  }
+
+  const updatedDocument = await Post.findByIdAndUpdate(postId, {
+    text, updatedAt: Date.now(),
+    images,
+  }, { new: true });
+
   response.status(200).json({
     status: STATUS_SUCCESS,
     data: {
-      data: document,
+      data: updatedDocument,
     },
   });
 });
@@ -117,6 +118,13 @@ export const deletePost = catchAsync(async (request: Request, response: Response
   if (document.user.toString() !== userId) {
     return next(new ApiError(YOU_CANNOT_REMOVE_OTHER_USER_POST, 400));
   }
+
+  const [imagePath] = document.images;
+
+  if (imagePath) {
+    await S3DeleteUserImage(imagePath);
+  }
+
 
   await Post.findByIdAndDelete(postId);
 
