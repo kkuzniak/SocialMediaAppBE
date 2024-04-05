@@ -17,11 +17,11 @@ import {
 /**
  * Endpoint that signs up the user
  *
- * @param req - Request
- * @param res - Response
+ * @param request - Request
+ * @param response - Response
  */
-export const signup = catchAsync(async (req: Request, res: Response) => {
-  const { body } = req;
+export const signup = catchAsync(async (request: Request, response: Response) => {
+  const { body } = request;
   const { name, email, password, passwordConfirm } = body;
 
   const photoBackground = randomColor();
@@ -34,17 +34,18 @@ export const signup = catchAsync(async (req: Request, res: Response) => {
     passwordConfirm,
   });
 
-  createAndSendToken(newUser, 201, req, res);
+  createAndSendToken(newUser, 201, request, response);
 });
 
 /**
  * Endpoint that logs in the user
  *
- * @param req - Request
- * @param res - Response
+ * @param request - Request
+ * @param response - Response
  */
-export const login = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  const { email, password } = req.body;
+export const login = catchAsync(async (request: Request, response: Response, next: NextFunction) => {
+  const { body } = request;
+  const { email, password } = body;
 
   if (!email || !password) {
     return next(new ApiError(PLEASE_PROVIDE_EMAIL_AND_PASSWORD, 400));
@@ -57,21 +58,21 @@ export const login = catchAsync(async (req: Request, res: Response, next: NextFu
     return next(new ApiError(INCORRECT_EMAIL_OR_PASSWORD, 401));
   }
 
-  createAndSendToken(user, 200, req, res);
+  createAndSendToken(user, 200, request, response);
 });
 
 /**
  * Endpoint that logs out the user
  *
- * @param res - Response
+ * @param response - Response
  */
-export const logout = catchAsync(async (_: Request, res: Response) => {
-  res.cookie('jwt', 'loggedout', {
+export const logout = catchAsync(async (_: Request, response: Response) => {
+  response.cookie('jwt', 'loggedout', {
     expires: new Date(Date.now() + 10 * 1000),
     httpOnly: true,
   });
 
-  res.status(200).json({
+  response.status(200).json({
     status: STATUS_SUCCESS,
   });
 });

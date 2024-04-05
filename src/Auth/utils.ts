@@ -19,20 +19,20 @@ const signToken = (userId: string) => jwt.sign({ id: userId }, process.env.JWT_S
  *
  * @param user - User that wants the JWT
  * @param statusCode - Status code for the client response
- * @param req - Request
- * @param res - Response
+ * @param request - Request
+ * @param response - Response
  */
-export const createAndSendToken = (user: IUser, statusCode: number, req: Request, res: Response) => {
+export const createAndSendToken = (user: IUser, statusCode: number, request: Request, response: Response) => {
   const token = signToken(user._id);
   const JWT_EXPIRES_IN_SECONDS = +process.env.JWT_COOKIE_EXPIRES_IN * 60 * 60 * 1000;
 
-  res.cookie('jwt', token, {
+  response.cookie('jwt', token, {
     expires: new Date(Date.now() + JWT_EXPIRES_IN_SECONDS),
     httpOnly: true,
-    secure: req.secure || req.headers['x-forwarded-proto'] === 'https',
+    secure: request.secure || request.headers['x-forwarded-proto'] === 'https',
   });
 
-  res.status(statusCode).json({
+  response.status(statusCode).json({
     status: STATUS_SUCCESS,
     token,
     data: {
