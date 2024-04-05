@@ -5,7 +5,7 @@ import { catchAsync } from '../utils';
 import { STATUS_SUCCESS } from '../strings';
 import { Post } from './model';
 import { ApiError } from '../Error/types';
-import { A_POST_DOESNT_EXIST, YOU_CANNOT_REMOVE_OTHER_USER_POST } from './strings';
+import { A_POST_DOESNT_EXIST, THE_LOGGED_IN_USER_IS_NOT_AN_OWNER } from './strings';
 import { ToggleLikeActionType } from './types';
 import { postImageFilter } from './utils';
 import { S3DeleteUserImage, S3UploadUserImage } from '../S3/controller';
@@ -13,6 +13,35 @@ import { getUserImageFilePath } from '../S3/utils';
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage, fileFilter: postImageFilter });
+
+export const checkPostsExistance = catchAsync(async (request: Request, _: Response, next: NextFunction) => {
+  const { params } = request;
+
+  const { id: postId } = params;
+
+  const document = await Post.findById(postId);
+
+  if (!document) {
+    return next(new ApiError(A_POST_DOESNT_EXIST, 404));
+  }
+
+  request.post.document = document;
+
+  next();
+});
+
+export const checkPostsOwner = catchAsync(async (request: Request, _: Response, next: NextFunction) => {
+  const { user, post } = request;
+  const { document } = post;
+
+  const { id: userId } = user;
+
+  if (document.user.toString() !== userId) {
+    return next(new ApiError(THE_LOGGED_IN_USER_IS_NOT_AN_OWNER, 400));
+  }
+
+  next();
+});
 
 export const uploadPostImage = upload.single('images');
 
@@ -38,17 +67,12 @@ export const createPost = catchAsync(async (request: Request, response: Response
   });
 });
 
-export const updatePost = catchAsync(async (request: Request, response: Response, next: NextFunction) => {
-  const { body, params, user, file } = request;
+export const updatePost = catchAsync(async (request: Request, response: Response, _: NextFunction) => {
+  const { body, params, user, file, post } = request;
   const { text } = body;
+  const { document } = post;
   const { id: postId } = params;
   const { id: userId } = user;
-
-  const document = await Post.findById(postId);
-
-  if (!document) {
-    return next(new ApiError(A_POST_DOESNT_EXIST, 404));
-  }
 
   const [prevImagePath] = document.images;
 
@@ -104,27 +128,16 @@ export const getPost = catchAsync(async (request: Request, response: Response, n
   });
 });
 
-export const deletePost = catchAsync(async (request: Request, response: Response, next: NextFunction) => {
-  const { params, user } = request;
-  const { id: postId } = params;
-  const { id: userId } = user;
-
-  const document = await Post.findById(postId);
-
-  if (!document) {
-    return next(new ApiError(A_POST_DOESNT_EXIST, 404));
-  }
-
-  if (document.user.toString() !== userId) {
-    return next(new ApiError(YOU_CANNOT_REMOVE_OTHER_USER_POST, 400));
-  }
+export const deletePost = catchAsync(async (request: Request, response: Response, _: NextFunction) => {
+  const { post } = request;
+  const { document } = post;
+  const { _id: postId } = document;
 
   const [imagePath] = document.images;
 
   if (imagePath) {
     await S3DeleteUserImage(imagePath);
   }
-
 
   await Post.findByIdAndDelete(postId);
 

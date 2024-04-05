@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 
 import { IUser } from './User/types';
+import { IPost } from './Post/types';
 
 declare module 'jsonwebtoken' {
   export interface UserIdJWTPayload extends jwt.JwtPayload {
@@ -12,6 +13,9 @@ declare global {
   namespace Express {
     export interface Request {
       user?: IUser;
+      post?: {
+        document: IPost
+      }
     }
   }
 }

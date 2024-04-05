@@ -1,6 +1,6 @@
 export const A_POST_DOESNT_EXIST = 'A post with the given id does not exist.';
 
-export const YOU_CANNOT_REMOVE_OTHER_USER_POST = 'You cannot remove a post created by another user.';
+export const THE_LOGGED_IN_USER_IS_NOT_AN_OWNER = 'The logged in user is not an owner of the post.';
 
 export const THE_FILE_IS_NOT_AN_IMAGE = 'The file is not an image of the required type (jpeg, jpg, png).';
 

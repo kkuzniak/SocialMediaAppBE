@@ -1,6 +1,16 @@
 import { Router } from 'express';
 
-import { createPost, deletePost, getAllPosts, getPost, toggleLike, updatePost, uploadPostImage } from './controller';
+import {
+  checkPostsExistance,
+  checkPostsOwner,
+  createPost,
+  deletePost,
+  getAllPosts,
+  getPost,
+  toggleLike,
+  updatePost,
+  uploadPostImage,
+} from './controller';
 import { protect } from '../Auth/controller';
 import { ToggleLikeActionType } from './types';
 
@@ -11,8 +21,8 @@ postRouter.route('/')
   .post(protect, uploadPostImage, createPost);
 postRouter.route('/:id')
   .get(protect, getPost)
-  .patch(protect, uploadPostImage, updatePost)
-  .delete(protect, deletePost);
+  .patch(protect, checkPostsExistance, checkPostsOwner, uploadPostImage, updatePost)
+  .delete(protect, checkPostsExistance, checkPostsOwner, deletePost);
 
 postRouter.route('/:id/like').patch(protect, toggleLike(ToggleLikeActionType.like));
 postRouter.route('/:id/unlike').patch(protect, toggleLike(ToggleLikeActionType.unlike));
