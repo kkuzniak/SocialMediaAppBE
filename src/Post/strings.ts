@@ -1,3 +1,8 @@
+export const REQUIRED_ERROR = {
+  user: 'A user must be assigned to the post',
+  text: 'Post text cannot be empty',
+};
+
 export const A_POST_DOESNT_EXIST = 'A post with the given id does not exist.';
 
 export const THE_LOGGED_IN_USER_IS_NOT_AN_OWNER = 'The logged in user is not an owner of the post.';

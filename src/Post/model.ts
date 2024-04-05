@@ -1,16 +1,17 @@
 import { Schema, model } from 'mongoose';
 
 import { IPost } from './types';
+import { REQUIRED_ERROR } from './strings';
 
 const postSchema = new Schema<IPost>({
   user: {
     type: Schema.ObjectId,
     ref: 'User',
-    required: [true, 'A user must be assigned to the post'],
+    required: [true, REQUIRED_ERROR.user],
   },
   text: {
     type: String,
-    required: [true, 'Post text cannot be empty'],
+    required: [true, REQUIRED_ERROR.text],
   },
   images: {
     type: [String],
