@@ -34,11 +34,11 @@ export interface MongooseValidationError extends Error {
 }
 
 export interface JsonWebTokenError extends Error {
-  name: 'JsonWebTokenError'
+  name: 'JsonWebTokenError';
 }
 
 export interface JsonWebTokenExpiredError extends Error {
-  name: 'TokenExpiredError'
+  name: 'TokenExpiredError';
 }
 
 export interface LimitUnexpectedFileError extends Error {

@@ -20,22 +20,24 @@ import {
  * @param request - Request
  * @param response - Response
  */
-export const signup = catchAsync(async (request: Request, response: Response) => {
-  const { body } = request;
-  const { name, email, password, passwordConfirm } = body;
+export const signup = catchAsync(
+  async (request: Request, response: Response) => {
+    const { body } = request;
+    const { name, email, password, passwordConfirm } = body;
 
-  const photoBackground = randomColor();
+    const photoBackground = randomColor();
 
-  const newUser = await User.create({
-    name,
-    email,
-    photoBackground,
-    password,
-    passwordConfirm,
-  });
+    const newUser = await User.create({
+      name,
+      email,
+      photoBackground,
+      password,
+      passwordConfirm,
+    });
 
-  createAndSendToken(newUser, 201, request, response);
-});
+    createAndSendToken(newUser, 201, request, response);
+  },
+);
 
 /**
  * Endpoint that logs in the user
@@ -43,23 +45,27 @@ export const signup = catchAsync(async (request: Request, response: Response) =>
  * @param request - Request
  * @param response - Response
  */
-export const login = catchAsync(async (request: Request, response: Response, next: NextFunction) => {
-  const { body } = request;
-  const { email, password } = body;
+export const login = catchAsync(
+  async (request: Request, response: Response, next: NextFunction) => {
+    const { body } = request;
+    const { email, password } = body;
 
-  if (!email || !password) {
-    return next(new ApiError(PLEASE_PROVIDE_EMAIL_AND_PASSWORD, 400));
-  }
+    if (!email || !password) {
+      return next(new ApiError(PLEASE_PROVIDE_EMAIL_AND_PASSWORD, 400));
+    }
 
-  const user = await User.findOne({ email }).select('+password');
-  const isPasswordCorrect = user ? await user.isPasswordCorrect(password, user.password) : false;
+    const user = await User.findOne({ email }).select('+password');
+    const isPasswordCorrect = user
+      ? await user.isPasswordCorrect(password, user.password)
+      : false;
 
-  if (!user || !isPasswordCorrect) {
-    return next(new ApiError(INCORRECT_EMAIL_OR_PASSWORD, 401));
-  }
+    if (!user || !isPasswordCorrect) {
+      return next(new ApiError(INCORRECT_EMAIL_OR_PASSWORD, 401));
+    }
 
-  createAndSendToken(user, 200, request, response);
-});
+    createAndSendToken(user, 200, request, response);
+  },
+);
 
 /**
  * Endpoint that logs out the user
@@ -84,36 +90,34 @@ export const logout = catchAsync(async (_: Request, response: Response) => {
  * @param response - Response
  * @param next - Next function
  */
-export const protect = catchAsync(async (request: Request, response: Response, next: NextFunction) => {
-  let token: string;
-  const { authorization } = request.headers;
+export const protect = catchAsync(
+  async (request: Request, response: Response, next: NextFunction) => {
+    let token: string;
+    const { authorization } = request.headers;
 
-  if (
-    authorization && authorization.startsWith('Bearer')
-  ) {
-    [,token] = authorization.split(' ');
-  } else if (request.cookies.jwt) {
-    token = request.cookies.jwt;
-  }
+    if (authorization && authorization.startsWith('Bearer')) {
+      [, token] = authorization.split(' ');
+    } else if (request.cookies.jwt) {
+      token = request.cookies.jwt;
+    }
 
-  if (!token) {
-    return next(
-      new ApiError(YOU_ARE_NOT_LOGGED_IN, 401),
-    );
-  }
+    if (!token) {
+      return next(new ApiError(YOU_ARE_NOT_LOGGED_IN, 401));
+    }
 
-  const { id: userId } = await <jwt.UserIdJWTPayload>jwt.verify(token, process.env.JWT_SECRET);
+    const { id: userId } = await (<jwt.UserIdJWTPayload>(
+      jwt.verify(token, process.env.JWT_SECRET)
+    ));
 
-  const currentUser = await User.findById(userId);
+    const currentUser = await User.findById(userId);
 
-  if (!currentUser) {
-    return next(
-      new ApiError(THE_USER_BELONGING_TO_THIS_TOKEN, 401),
-    );
-  }
+    if (!currentUser) {
+      return next(new ApiError(THE_USER_BELONGING_TO_THIS_TOKEN, 401));
+    }
 
-  request.user = currentUser;
-  response.locals.user = currentUser;
+    request.user = currentUser;
+    response.locals.user = currentUser;
 
-  next();
-});
+    next();
+  },
+);

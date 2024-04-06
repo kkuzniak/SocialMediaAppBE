@@ -38,8 +38,7 @@ export const isApiError = (error: unknown | ApiError): error is ApiError => {
   if (
     typeof error === 'object' &&
     'status' in error &&
-    (error.status === 'fail' ||
-    error.status === 'error') &&
+    (error.status === 'fail' || error.status === 'error') &&
     'statusCode' in error &&
     typeof error.statusCode === 'number' &&
     'isOperational' in error &&
@@ -57,7 +56,9 @@ export const isApiError = (error: unknown | ApiError): error is ApiError => {
  * @param error - Error
  * @returns true when the error is of the MongooseDuplicateFieldsError type, false when it's not
  */
-export const isMongooseDuplicateFieldsError = (error: unknown | ApiError): error is MongooseDuplicateFieldsError => {
+export const isMongooseDuplicateFieldsError = (
+  error: unknown | ApiError,
+): error is MongooseDuplicateFieldsError => {
   if (
     isStandardError(error) &&
     'keyValue' in error &&
@@ -78,15 +79,18 @@ export const isMongooseDuplicateFieldsError = (error: unknown | ApiError): error
  * @param error - Error
  * @returns true when the error is of the MongooseValidationError type, false when it's not
  */
-export const isMongooseValidationError = (error: unknown | ApiError): error is MongooseValidationError => {
+export const isMongooseValidationError = (
+  error: unknown | ApiError,
+): error is MongooseValidationError => {
   if (
     isStandardError(error) &&
     'errors' in error &&
     typeof error.errors === 'object' &&
-    Object.values(error.errors).every(value =>
-      typeof value === 'object' &&
-      'message' in value &&
-      typeof value.message === 'string',
+    Object.values(error.errors).every(
+      value =>
+        typeof value === 'object' &&
+        'message' in value &&
+        typeof value.message === 'string',
     )
   ) {
     return true;
@@ -101,7 +105,9 @@ export const isMongooseValidationError = (error: unknown | ApiError): error is M
  * @param error - Error
  * @returns true when the error is of the JsonWebTokenError type, false when it's not
  */
-export const isJsonWebTokenError = (error: unknown | ApiError): error is JsonWebTokenError => {
+export const isJsonWebTokenError = (
+  error: unknown | ApiError,
+): error is JsonWebTokenError => {
   if (isStandardError(error) && error.name === 'JsonWebTokenError') {
     return true;
   }
@@ -115,7 +121,9 @@ export const isJsonWebTokenError = (error: unknown | ApiError): error is JsonWeb
  * @param error - Error
  * @returns true when the error is of the JsonWebTokenExpiredError type, false when it's not
  */
-export const isJsonWebTokenExpiredError = (error: unknown | ApiError): error is JsonWebTokenExpiredError => {
+export const isJsonWebTokenExpiredError = (
+  error: unknown | ApiError,
+): error is JsonWebTokenExpiredError => {
   if (isStandardError(error) && error.name === 'TokenExpiredError') {
     return true;
   }
@@ -129,8 +137,11 @@ export const isJsonWebTokenExpiredError = (error: unknown | ApiError): error is 
  * @param error - Error
  * @returns true when the error is of the LimitUnexpectedFileError type, false when it's not
  */
-export const isLimitUnexpectedFileError = (error: unknown | ApiError): error is LimitUnexpectedFileError => {
-  if (isStandardError(error) &&
+export const isLimitUnexpectedFileError = (
+  error: unknown | ApiError,
+): error is LimitUnexpectedFileError => {
+  if (
+    isStandardError(error) &&
     'code' in error &&
     error.code === 'LIMIT_UNEXPECTED_FILE'
   ) {

@@ -34,13 +34,13 @@ module.exports = {
     '@typescript-eslint/no-unused-vars': 'off', // do not allow variables which are not used anywhere
     'object-shorthand': 'off',
     'no-underscore-dangle': 'off', // disallow dangling underscores in identifiers
-    "lines-between-class-members": "off",
-    "@typescript-eslint/lines-between-class-members": "off",
+    'lines-between-class-members': 'off',
+    '@typescript-eslint/lines-between-class-members': 'off',
     'consistent-return': 'off', // if function return a value in one logical branch it should return a value in all other branches as well
-    'func-names': ['off'],
+    'func-names': 'off',
+    '@typescript-eslint/indent': 'off', // enforcing consistent indentation
 
     /** these are our own custom rules **/
-    '@typescript-eslint/indent': ['error', 2], // enforcing consistent indentation
     'newline-per-chained-call': 'error', // requiring a newline after each call in a method chain
     'import/order': [
       // allow eslint to handle import order
@@ -71,6 +71,7 @@ module.exports = {
     // maybe we can enable this at some point?
     // "func-style": ["warn", "expression"],
     'no-trailing-spaces': 'error',
+    'prettier/prettier': 'error',
 
     /** These rules are set to `warn` to suppress the default `error` value they have so once each is resolved we should remove the specific rule  **/
     '@typescript-eslint/naming-convention': 'warn', // only allow variable naming following camelCase, PascalCase, UPPER_CASE

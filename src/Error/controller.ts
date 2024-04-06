@@ -1,6 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
 
-import { ApiError, MongooseErrorKeyValue, MongooseValidationError } from './types';
+import {
+  ApiError,
+  MongooseErrorKeyValue,
+  MongooseValidationError,
+} from './types';
 import {
   isApiError,
   isJsonWebTokenError,
@@ -9,7 +13,10 @@ import {
   isMongooseDuplicateFieldsError,
   isMongooseValidationError,
 } from './utils';
-import { duplicateFieldsErrorMessage, validationDatabaseErrorMessage } from './dynamic_strings';
+import {
+  duplicateFieldsErrorMessage,
+  validationDatabaseErrorMessage,
+} from './dynamic_strings';
 import {
   INVALID_TOKEN,
   ONE_FILE_REQUIRED,
@@ -21,7 +28,10 @@ const handleDuplicateFieldsError = (keyValue: MongooseErrorKeyValue) => {
   const failedFields = Object.keys(keyValue);
   const joinedFailedFields = failedFields.join(', ');
 
-  const message = duplicateFieldsErrorMessage(failedFields.length, joinedFailedFields);
+  const message = duplicateFieldsErrorMessage(
+    failedFields.length,
+    joinedFailedFields,
+  );
 
   return new ApiError(message, 400);
 };
@@ -36,11 +46,16 @@ const handleValidationDatabaseError = (error: MongooseValidationError) => {
 
 const handleJsonWebTokenError = () => new ApiError(INVALID_TOKEN, 401);
 
-const handleJsonWebTokenExpiredError = () => new ApiError(THE_TOKEN_HAS_EXPIRED, 401);
+const handleJsonWebTokenExpiredError = () =>
+  new ApiError(THE_TOKEN_HAS_EXPIRED, 401);
 
 const handleLimitUnexpectedFile = () => new ApiError(ONE_FILE_REQUIRED, 400);
 
-const sendError = (error: unknown | ApiError, _: Request, response: Response) => {
+const sendError = (
+  error: unknown | ApiError,
+  _: Request,
+  response: Response,
+) => {
   if (isApiError(error) && error.isOperational) {
     const { status, statusCode, message } = error;
 

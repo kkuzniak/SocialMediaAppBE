@@ -2,7 +2,10 @@ import { DeleteObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
 
 import { getS3Client } from './utils';
 
-export const S3UploadUserImage = (file: Express.Multer.File, imagePath: string) => {
+export const S3UploadUserImage = (
+  file: Express.Multer.File,
+  imagePath: string,
+) => {
   const s3Client = getS3Client();
 
   const s3Command = new PutObjectCommand({

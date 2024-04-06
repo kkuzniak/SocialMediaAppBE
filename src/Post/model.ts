@@ -17,10 +17,12 @@ const postSchema = new Schema<IPost>({
     type: [String],
     default: [],
   },
-  likes: [{
-    type: Schema.Types.ObjectId,
-    ref: 'User',
-  }],
+  likes: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+    },
+  ],
   addedAt: {
     type: Date,
     default: Date.now(),

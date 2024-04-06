@@ -3,7 +3,11 @@ import validator from 'validator';
 import bcrypt from 'bcryptjs';
 
 import { IUser } from './types';
-import { REQUIRED_ERROR, VALID_EMAIL_ERROR, VALID_PASSWORD_CONFIRM_ERROR } from './strings';
+import {
+  REQUIRED_ERROR,
+  VALID_EMAIL_ERROR,
+  VALID_PASSWORD_CONFIRM_ERROR,
+} from './strings';
 
 /**
  * User schema
@@ -37,7 +41,7 @@ const userSchema = new Schema<IUser>({
     type: String,
     required: [true, REQUIRED_ERROR.passwordConfirm],
     validate: {
-      validator: function(this: IUser, el: string) {
+      validator: function (this: IUser, el: string) {
         return el === this.password;
       },
       message: VALID_PASSWORD_CONFIRM_ERROR,
@@ -51,14 +55,17 @@ const userSchema = new Schema<IUser>({
   },
 });
 
-userSchema.pre('save', async function(this: IUser, next: CallbackWithoutResultAndOptionalError) {
-  this.password = await bcrypt.hash(this.password, 12);
-  this.passwordConfirm = undefined;
+userSchema.pre(
+  'save',
+  async function (this: IUser, next: CallbackWithoutResultAndOptionalError) {
+    this.password = await bcrypt.hash(this.password, 12);
+    this.passwordConfirm = undefined;
 
-  next();
-});
+    next();
+  },
+);
 
-userSchema.methods.isPasswordCorrect = async function(
+userSchema.methods.isPasswordCorrect = async function (
   passwordToCheck: string,
   correctPassword: string,
 ) {

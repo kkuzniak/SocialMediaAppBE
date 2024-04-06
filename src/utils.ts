@@ -10,6 +10,7 @@ import { RequestHandler } from './types';
  * @param fn - Async function to catch its errors
  * @returns an async function to catch the errors from its result
  */
-export const catchAsync = (fn: RequestHandler) =>
+export const catchAsync =
+  (fn: RequestHandler) =>
   (request: Request, response: Response, next: NextFunction) =>
     fn(request, response, next).catch(next);

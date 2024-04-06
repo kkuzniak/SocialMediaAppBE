@@ -7,4 +7,5 @@ export const REQUIRED_ERROR = {
 
 export const VALID_EMAIL_ERROR = 'Please provide a valid email.';
 
-export const VALID_PASSWORD_CONFIRM_ERROR = 'The password and password confirmation must be the same.';
+export const VALID_PASSWORD_CONFIRM_ERROR =
+  'The password and password confirmation must be the same.';

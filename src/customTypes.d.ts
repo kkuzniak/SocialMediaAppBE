@@ -14,8 +14,8 @@ declare global {
     export interface Request {
       user?: IUser;
       post?: {
-        document: IPost
-      }
+        document: IPost;
+      };
     }
   }
 }

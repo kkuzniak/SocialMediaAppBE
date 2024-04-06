@@ -11,5 +11,5 @@ export interface IPost extends Document {
 
 export enum ToggleLikeActionType {
   like = 'like',
-  unlike = 'unlike'
-};
+  unlike = 'unlike',
+}

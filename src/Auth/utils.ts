@@ -10,9 +10,10 @@ import { STATUS_SUCCESS } from '../strings';
  * @param userId - User id
  * @returns a generated JWT token
  */
-const signToken = (userId: string) => jwt.sign({ id: userId }, process.env.JWT_SECRET, {
-  expiresIn: process.env.JWT_EXPIRES_IN,
-});
+const signToken = (userId: string) =>
+  jwt.sign({ id: userId }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRES_IN,
+  });
 
 /**
  * Function that creates JWT token and sends it to the client
@@ -22,9 +23,15 @@ const signToken = (userId: string) => jwt.sign({ id: userId }, process.env.JWT_S
  * @param request - Request
  * @param response - Response
  */
-export const createAndSendToken = (user: IUser, statusCode: number, request: Request, response: Response) => {
+export const createAndSendToken = (
+  user: IUser,
+  statusCode: number,
+  request: Request,
+  response: Response,
+) => {
   const token = signToken(user._id);
-  const JWT_EXPIRES_IN_SECONDS = +process.env.JWT_COOKIE_EXPIRES_IN * 60 * 60 * 1000;
+  const JWT_EXPIRES_IN_SECONDS =
+    +process.env.JWT_COOKIE_EXPIRES_IN * 60 * 60 * 1000;
 
   response.cookie('jwt', token, {
     expires: new Date(Date.now() + JWT_EXPIRES_IN_SECONDS),

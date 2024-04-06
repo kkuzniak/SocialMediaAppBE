@@ -16,15 +16,27 @@ import { ToggleLikeActionType } from './types';
 
 const postRouter = Router();
 
-postRouter.route('/')
+postRouter
+  .route('/')
   .get(protect, getAllPosts)
   .post(protect, uploadPostImage, createPost);
-postRouter.route('/:id')
+postRouter
+  .route('/:id')
   .get(protect, getPost)
-  .patch(protect, checkPostsExistance, checkPostsOwner, uploadPostImage, updatePost)
+  .patch(
+    protect,
+    checkPostsExistance,
+    checkPostsOwner,
+    uploadPostImage,
+    updatePost,
+  )
   .delete(protect, checkPostsExistance, checkPostsOwner, deletePost);
 
-postRouter.route('/:id/like').patch(protect, toggleLike(ToggleLikeActionType.like));
-postRouter.route('/:id/unlike').patch(protect, toggleLike(ToggleLikeActionType.unlike));
+postRouter
+  .route('/:id/like')
+  .patch(protect, toggleLike(ToggleLikeActionType.like));
+postRouter
+  .route('/:id/unlike')
+  .patch(protect, toggleLike(ToggleLikeActionType.unlike));
 
 export default postRouter;
