@@ -1,5 +1,6 @@
 export const REQUIRED_ERROR = {
-  name: 'Name field cannot be empty.',
+  firstName: 'First name field cannot be empty.',
+  lastName: 'Last name field cannot be empty.',
   email: 'Email field cannot be empty.',
   password: 'Password field cannot be empty.',
   passwordConfirm: 'Password confirmation field cannot be empty.',

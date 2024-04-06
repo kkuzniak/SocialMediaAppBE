@@ -5,4 +5,4 @@ export const duplicateFieldsErrorMessage = (
   `Duplicate field value${numberOfFields > 1 ? 's' : ''}: ${joinedFailedFields}. Please use another value.`;
 
 export const validationDatabaseErrorMessage = (errorMessages: string[]) =>
-  `Invalid input data. ${errorMessages.join('. ')}.`;
+  `Invalid input data. ${errorMessages.join(' ')}`;

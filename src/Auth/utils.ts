@@ -29,6 +29,8 @@ export const createAndSendToken = (
   request: Request,
   response: Response,
 ) => {
+  const { firstName, lastName, email } = user;
+
   const token = signToken(user._id);
   const JWT_EXPIRES_IN_SECONDS =
     +process.env.JWT_COOKIE_EXPIRES_IN * 60 * 60 * 1000;
@@ -44,8 +46,9 @@ export const createAndSendToken = (
     token,
     data: {
       user: {
-        name: user.name,
-        email: user.email,
+        firstName,
+        lastName,
+        email,
       },
     },
   });

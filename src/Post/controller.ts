@@ -125,11 +125,11 @@ export const getPost = catchAsync(
     const document = await Post.findById(postId)
       .populate({
         path: 'user',
-        select: 'name',
+        select: 'firstName lastName',
       })
       .populate({
         path: 'likes',
-        select: 'name',
+        select: 'firstName lastName',
       })
       .sort({ addedAt: -1 })
       .select('-__v');
@@ -184,7 +184,7 @@ export const toggleLike = (actionType: ToggleLikeActionType) =>
         { new: true },
       ).populate({
         path: 'likes',
-        select: 'name',
+        select: 'firstName lastName',
       });
 
       if (!document) {
@@ -206,11 +206,11 @@ export const getAllPosts = catchAsync(
     const documents = await Post.find()
       .populate({
         path: 'user',
-        select: 'name',
+        select: 'firstName lastName',
       })
       .populate({
         path: 'likes',
-        select: 'name',
+        select: 'firstName lastName',
       })
       .sort({ addedAt: -1 })
       .select('-__v');

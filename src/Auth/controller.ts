@@ -23,12 +23,13 @@ import {
 export const signup = catchAsync(
   async (request: Request, response: Response) => {
     const { body } = request;
-    const { name, email, password, passwordConfirm } = body;
+    const { firstName, lastName, email, password, passwordConfirm } = body;
 
     const photoBackground = randomColor();
 
     const newUser = await User.create({
-      name,
+      firstName,
+      lastName,
       email,
       photoBackground,
       password,

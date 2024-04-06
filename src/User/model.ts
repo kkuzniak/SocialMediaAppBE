@@ -13,9 +13,13 @@ import {
  * User schema
  */
 const userSchema = new Schema<IUser>({
-  name: {
+  firstName: {
     type: String,
-    required: [true, REQUIRED_ERROR.name],
+    required: [true, REQUIRED_ERROR.firstName],
+  },
+  lastName: {
+    type: String,
+    required: [true, REQUIRED_ERROR.lastName],
   },
   email: {
     type: String,
@@ -52,6 +56,14 @@ const userSchema = new Schema<IUser>({
     type: Boolean,
     default: true,
     select: false,
+  },
+  addedAt: {
+    type: Date,
+    default: Date.now(),
+  },
+  updatedAt: {
+    type: Date,
+    default: Date.now(),
   },
 });
 
