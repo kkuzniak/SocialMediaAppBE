@@ -1,10 +1,9 @@
 import { Document, Schema } from 'mongoose';
 
-export interface IPost extends Document {
-  user: Schema.Types.ObjectId;
+export interface IComment extends Document {
+  post: Schema.Types.ObjectId;
   text: string;
-  images: [string];
-  likes: [Schema.Types.ObjectId];
+  likes: [string];
   addedAt: Date;
   updatedAt: Date;
 }

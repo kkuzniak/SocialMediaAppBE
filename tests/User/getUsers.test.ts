@@ -3,7 +3,7 @@ import request from 'supertest';
 import * as db from '../databaseMock';
 import app from '../../app';
 
-describe('GET /api/v1/users', () => {
+describe('GET /v1/users', () => {
   beforeAll(async () => {
     await db.connect();
   });
@@ -18,7 +18,7 @@ describe('GET /api/v1/users', () => {
 
   it('returns users array properly when called', async () =>
     request(app)
-      .get('/api/v1/users')
+      .get('/v1/users')
       .expect('Content-Type', /json/)
       .expect(200)
       .then(res => {

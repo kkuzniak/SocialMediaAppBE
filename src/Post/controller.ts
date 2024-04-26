@@ -212,6 +212,10 @@ export const getAllPosts = catchAsync(
         path: 'likes',
         select: 'firstName lastName',
       })
+      .populate({
+        path: 'comments',
+        select: '_id text likes addedAt',
+      })
       .sort({ addedAt: -1 })
       .select('-__v');
 

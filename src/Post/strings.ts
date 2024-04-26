@@ -1,6 +1,6 @@
 export const REQUIRED_ERROR = {
-  user: 'A user must be assigned to the post',
-  text: 'Post text cannot be empty',
+  user: 'A user must be assigned to the post.',
+  text: 'Post text cannot be empty.',
 };
 
 export const A_POST_DOESNT_EXIST = 'A post with the given id does not exist.';
