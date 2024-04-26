@@ -9,9 +9,6 @@ import {
   VALID_PASSWORD_CONFIRM_ERROR,
 } from './strings';
 
-/**
- * User schema
- */
 const userSchema = new Schema<IUser>({
   firstName: {
     type: String,
