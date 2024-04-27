@@ -16,54 +16,6 @@ import { ToggleLikeActionType } from './types';
 
 /**
  * @swagger
- * components:
- *  schemas:
- *    DefaultApiResponse:
- *      type: object
- *      properties:
- *        status:
- *          type: string
- *          example: success
- *    Post:
- *      type: object
- *      properties:
- *        _id:
- *          type: string
- *          example: PostId
- *        user:
- *          type: object
- *          properties:
- *            _id:
- *              type: string
- *              example: UserId
- *           firstName:
- *              type: string
- *              example: Mike
- *           lastName:
- *              type: string
- *              example: Wazowsky
- *        text:
- *          type: string
- *          example: What a great view!
- *        images:
- *          type: array
- *          example: []
- *        likes:
- *          type: array
- *          example: []
- *  parameters:
- *    postId:
- *      name: postId
- *      in: path
- *      description: An id of a post to like
- *      required: true
- *      schema:
- *        type: string
- *        example: 662ada4c46b73e708e2458b8
- */
-
-/**
- * @swagger
  * tags:
  *   name: Post
  *   description: Posts management
@@ -80,11 +32,7 @@ const postRouter = Router();
  *       - application/json
  *     responses:
  *       200:
- *         description: Successfull request
- *         content:
- *           application/json:
- *             schema:
- *             $ref: '#/components/schemas/TokenApiResponse'
+ *        $ref: '#/components/responses/200MultiplePosts'
  *   post:
  *     summary: Creates a new post
  *     tags: [Post]
@@ -93,18 +41,10 @@ const postRouter = Router();
  *     produces:
  *       - application/json
  *     requestBody:
- *       required: true
- *       content:
- *        application/json:
- *          schema:
- *            $ref: '#/components/schemas/Post'
+ *       $ref: '#/components/requestBodies/Post'
  *     responses:
  *       200:
- *         description: Successfully created a post
- *         content:
- *           application/json:
- *             schema:
- *             $ref: '#/components/schemas/TokenApiResponse'
+ *         $ref: '#/components/responses/200SinglePost'
  */
 postRouter
   .route('/')
@@ -122,46 +62,38 @@ postRouter
  *     parameters:
  *      - $ref: '#/components/parameters/postId'
  *     responses:
- *       200:
- *         description: Successfully gotten all posts
- *         content:
- *           application/json:
- *             schema:
- *             $ref: '#/components/schemas/TokenApiResponse'
+ *      200:
+ *        $ref: '#/components/responses/200SinglePostWithUser'
+ *      404:
+ *        $ref: '#/components/responses/404Post'
  *   patch:
- *     summary: Updates a post by id
+ *     summary: Updates a post with given id
  *     tags: [Post]
  *     consumes:
  *       - application/json
  *     produces:
  *       - application/json
+ *     parameters:
+ *      - $ref: '#/components/parameters/postId'
  *     requestBody:
- *       required: true
- *       content:
- *        application/json:
- *          schema:
- *            $ref: '#/components/schemas/Post'
+ *       $ref: '#/components/requestBodies/Post'
  *     responses:
  *       200:
- *         description: Successfull request
- *         content:
- *           application/json:
- *             schema:
- *             $ref: '#/components/schemas/TokenApiResponse'
+ *         $ref: '#/components/responses/200SinglePost'
+ *       404:
+ *         $ref: '#/components/responses/404Post'
  *   delete:
  *     summary: Deletes a post with given id
  *     tags: [Post]
  *     produces:
- *       - application/json
+ *      - application/json
  *     parameters:
- *       - $ref: '#/components/parameters/PostId'
+ *      - $ref: '#/components/parameters/postId'
  *     responses:
- *       200:
- *         description: Successfull request
- *         content:
- *           application/json:
- *             schema:
- *             $ref: '#/components/schemas/TokenApiResponse'
+ *      204:
+ *        $ref: '#/components/responses/204'
+ *      404:
+ *        $ref: '#/components/responses/404Post'
  */
 postRouter
   .route('/:id')
@@ -184,14 +116,12 @@ postRouter
  *     produces:
  *      - application/json
  *     parameters:
- *      - $ref: '#/components/parameters/PostId'
+ *      - $ref: '#/components/parameters/postId'
  *     responses:
  *       200:
- *         description: Successfull request
- *         content:
- *           application/json:
- *             schema:
- *             $ref: '#/components/schemas/TokenApiResponse'
+ *         $ref: '#/components/responses/200LikedPost'
+ *       404:
+ *         $ref: '#/components/responses/404Post'
  */
 postRouter
   .route('/:id/like')
@@ -205,13 +135,13 @@ postRouter
  *     tags: [Post]
  *     produces:
  *       - application/json
+ *     parameters:
+ *      - $ref: '#/components/parameters/postId'
  *     responses:
  *       200:
- *         description: Successfull request
- *         content:
- *           application/json:
- *             schema:
- *             $ref: '#/components/schemas/TokenApiResponse'
+ *         $ref: '#/components/responses/200UnlikedPost'
+ *       404:
+ *         $ref: '#/components/responses/404Post'
  */
 postRouter
   .route('/:id/unlike')
