@@ -1,0 +1,184 @@
+components:
+  schemas:
+    Post:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: PostId
+        user:
+          type: string
+          example: UserId
+        text:
+          type: string
+          example: What a great view!
+        images:
+          type: array
+          example: []
+        likes:
+          type: array
+          example: []
+        addedAt:
+          type: string
+          example: 2024-04-26T20:00:00.000Z
+        updatedAt:
+          type: string
+          example: 2024-04-26T20:00:00.000Z
+        id:
+          type: string
+          example: PostId
+    PostWithSimpleUser:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: PostId
+        user:
+          $ref: '#/components/schemas/SimpleUser'
+        text:
+          type: string
+          example: What a great view!
+        images:
+          type: array
+          example: []
+        likes:
+          type: array
+          example: []
+        addedAt:
+          type: string
+          example: 2024-04-26T20:00:00.000Z
+        updatedAt:
+          type: string
+          example: 2024-04-26T20:00:00.000Z
+        id:
+          type: string
+          example: PostId
+  parameters:
+    postId:
+      name: postId
+      in: path
+      description: A post Id
+      required: true
+      schema:
+        type: string
+        example: 662ada4c46b73e708e2458b8
+  requestBodies:
+    Post:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              text:
+                type: string
+                example: What a great view!
+              images:
+                type: file
+                example: []
+  responses:
+    200SinglePost:
+      description: Successfull request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: success
+              results:
+                type: number
+                example: 1
+              data:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Post'
+    200SinglePostWithUser:
+      description: Successfull request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: success
+              results:
+                type: number
+                example: 1
+              data:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/PostWithSimpleUser'
+    200MultiplePosts:
+      description: Successful request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: success
+              data:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PostWithSimpleUser'
+    200LikedPost:
+      description: Successful request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: success
+              results:
+                type: number
+                example: 1
+              data:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SimpleUser'
+    200UnlikedPost:
+      description: Successful request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: success
+              results:
+                type: number
+                example: 0
+              data:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    example: []
+    404Post:
+      description: Not found error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: fail
+              message:
+                type: string
+                example: A post with the given id does not exist.

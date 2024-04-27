@@ -1,0 +1,25 @@
+components:
+  schemas:
+  parameters:
+  requestBodies:
+  responses:
+    200Simple:
+      description: Successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DefaultApiResponse'
+    204:
+      description: Successfully deleted
+    400BadRequest:
+      description: Bad request error
+      content:
+        application/json:
+          schema:
+            $ref: '#components/schemas/FailedApiResponse'
+    401Validation:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/FailedApiResponse'

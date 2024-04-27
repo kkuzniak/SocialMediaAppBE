@@ -1,0 +1,100 @@
+components:
+  schemas:
+    DefaultApiResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+    TokenApiResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        token:
+          type: string
+          example: An authentication token
+        data:
+          type: object
+          properties:
+            user:
+              type: object
+              properties:
+                firstName:
+                  type: string
+                  example: Anakin
+                lastName:
+                  type: string
+                  example: Skywalker
+                email:
+                  type: string
+                  example: a.skywalker@gmail.com
+    FailedApiResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: fail
+        message:
+          type: string
+          example: Description of the error
+    SimpleUser:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: UserId
+        firstName:
+          type: string
+          example: Mike
+        lastName:
+          type: string
+          example: Wazowsky
+    User:
+      type: object
+      properties:
+        firstName:
+          type: string
+          example: Anakin
+        lastName:
+          type: string
+          example: Skywalker
+        email:
+          type: string
+          example: a.skywalker@gmail.com
+        password:
+          type: string
+          example: Dont_like_sand_4
+        passwordConfirm:
+          type: string
+          example: Dont_like_sand_4
+    TestUser:
+      type: object
+      properties:
+        email:
+          type: string
+          example: tester@gmail.com
+        password:
+          type: string
+          example: test1234
+  requestBodies:
+    User:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/User'
+    TestUser:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#components/schemas/TestUser'
+  responses:
+    200Token:
+      description: Successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TokenApiResponse'
