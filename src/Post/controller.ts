@@ -29,7 +29,7 @@ export const checkPostsExistance = catchAsync(
       return next(new ApiError(A_POST_DOESNT_EXIST, 404));
     }
 
-    request.post.document = document;
+    request.postDocument = document;
 
     next();
   },
@@ -37,12 +37,11 @@ export const checkPostsExistance = catchAsync(
 
 export const checkPostsOwner = catchAsync(
   async (request: Request, _: Response, next: NextFunction) => {
-    const { user, post } = request;
-    const { document } = post;
+    const { user, postDocument } = request;
 
     const { id: userId } = user;
 
-    if (document.user.toString() !== userId) {
+    if (postDocument.user.toString() !== userId) {
       return next(new ApiError(THE_LOGGED_IN_USER_IS_NOT_AN_OWNER, 400));
     }
 
@@ -78,13 +77,12 @@ export const createPost = catchAsync(
 
 export const updatePost = catchAsync(
   async (request: Request, response: Response, _: NextFunction) => {
-    const { body, params, user, file, post } = request;
+    const { body, params, user, file, postDocument } = request;
     const { text } = body;
-    const { document } = post;
     const { id: postId } = params;
     const { id: userId } = user;
 
-    const [prevImagePath] = document.images;
+    const [prevImagePath] = postDocument.images;
 
     if (prevImagePath) {
       await S3DeleteUserImage(prevImagePath);
@@ -149,11 +147,10 @@ export const getPost = catchAsync(
 
 export const deletePost = catchAsync(
   async (request: Request, response: Response, _: NextFunction) => {
-    const { post } = request;
-    const { document } = post;
-    const { _id: postId } = document;
+    const { postDocument } = request;
+    const { _id: postId } = postDocument;
 
-    const [imagePath] = document.images;
+    const [imagePath] = postDocument.images;
 
     if (imagePath) {
       await S3DeleteUserImage(imagePath);

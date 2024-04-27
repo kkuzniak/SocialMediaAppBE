@@ -13,9 +13,7 @@ declare global {
   namespace Express {
     export interface Request {
       user?: IUser;
-      post?: {
-        document: IPost;
-      };
+      postDocument: IPost;
     }
   }
 }
